@@ -4,45 +4,36 @@ import { Send } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import MessageBubble from "./MessageBubble";
 import { Message } from "@/types/message.types";
-import { fakeMessages } from "@/lib/fake-data";
-import {
-  SignedIn,
-  SignedOut,
-  SignInButton,
-  SignOutButton,
-  UserButton,
-  useUser,
-} from "@clerk/nextjs";
+import { SignedIn, UserButton, useUser } from "@clerk/nextjs";
 import LoginDialog from "@/components/LoginDialog";
+import { useMutation, useQuery } from "convex/react";
+import { api } from "../../../../convex/_generated/api";
 
 const ChatScreen = () => {
   const [chatInput, setChatInput] = useState("");
-  const [messages, setMessages] = useState<Message[]>(fakeMessages);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  const user = useUser();
+  const messages = useQuery(api.messages.getMessages);
+  const sendMessage = useMutation(api.messages.sendMessage);
+
+  const { user, isSignedIn } = useUser();
 
   const handleSendMessage = () => {
-    if (!user.isSignedIn) {
+    if (!isSignedIn) {
       // open login dialog
       setIsDialogOpen(true);
       return;
     }
-    const newMessage = {
-      _id: Date.now().toString(),
+
+    sendMessage({
       content: chatInput,
-      authorId: "user2",
-      isPinned: true,
-      reactions: [{ userId: "user1", emoji: "😂" }],
-      isEdited: true,
-      editedAt: 1715150000000,
-    };
-    setMessages((prev) => [...prev, newMessage]);
+      userId: user.id,
+    });
     setChatInput("");
   };
 
   useEffect(() => {
-    console.log("user", user);
+    console.log("user", user?.id);
   }, []);
 
   return (
@@ -50,15 +41,10 @@ const ChatScreen = () => {
       <nav className="flex">
         <SignedIn>
           <UserButton />
-          {user && (
-            <h2 className="flex-1 text-center text-2xl">
-              {user.user?.fullName}
-            </h2>
+          {isSignedIn && (
+            <h2 className="flex-1 text-center text-2xl">{user?.fullName}</h2>
           )}
         </SignedIn>
-        {/* <SignedOut>
-          <h2 className="flex-1 text-center">Who are you?</h2>
-        </SignedOut> */}
 
         <LoginDialog
           isDialogOpen={isDialogOpen}
@@ -67,9 +53,7 @@ const ChatScreen = () => {
       </nav>
 
       <section className="flex-1 space-y-2">
-        {messages.map((msg) => (
-          <MessageBubble key={msg._id} {...msg} />
-        ))}
+        {messages?.map((msg) => <MessageBubble key={msg._id} {...msg} />)}
       </section>
       <footer className="relative">
         <input

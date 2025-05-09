@@ -10,15 +10,13 @@ type MessageBubbleProps = {
 
 const MessageBubble = ({ content, isEdited, authorId }: MessageBubbleProps) => {
   const { user } = useUser();
-  // const message = useQuery(api.messages.getMessage, { messageId });
+  const isCurrentUserAuthor = user?.id === authorId;
 
-  // const isCurrentUserAuthor = user?.id === message?.authorId;
-  const isCurrentUserAuthor = true;
   return (
     <div
       className={cn(
-        "bg-teal-200 py-2 px-3 rounded-full w-fit",
-        isCurrentUserAuthor ? "bg-slate-200" : "ml-auto"
+        " py-2 px-3 rounded-full w-fit",
+        isCurrentUserAuthor ? "ml-auto bg-teal-200" : "bg-slate-200"
       )}
     >
       {content}
