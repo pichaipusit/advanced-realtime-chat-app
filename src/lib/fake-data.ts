@@ -6,10 +6,7 @@ export const fakeMessages: Message[] = [
     content: "Hello world!",
     authorId: "user1",
     isPinned: false,
-    reactions: [
-      { userId: "user2", emoji: "👍" },
-      { userId: "user3", emoji: "❤️" },
-    ],
+    reactions: [{ userId: "user2", emoji: "👍" }],
     isEdited: false,
   },
   {
@@ -24,7 +21,7 @@ export const fakeMessages: Message[] = [
   {
     _id: "msg3",
     content: "This message was deleted.",
-    authorId: "user3",
+    authorId: "user1",
     isPinned: false,
     reactions: [],
     isEdited: false,

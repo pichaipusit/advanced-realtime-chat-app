@@ -2,20 +2,13 @@
 import { Button } from "@/components/ui/button";
 import { Send } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
-import MessageBubble from "./MessageBubble";
 import { Message } from "@/types/message.types";
 import { fakeMessages } from "@/lib/fake-data";
-import {
-  SignedIn,
-  SignedOut,
-  SignInButton,
-  SignOutButton,
-  UserButton,
-  useUser,
-} from "@clerk/nextjs";
+import { SignedOut, useUser } from "@clerk/nextjs";
 import LoginDialog from "@/components/LoginDialog";
+import GuestMessageBubble from "./GuestMessageBubble";
 
-const ChatScreen = () => {
+const GuestChatScreen = () => {
   const [chatInput, setChatInput] = useState("");
   const [messages, setMessages] = useState<Message[]>(fakeMessages);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -24,41 +17,17 @@ const ChatScreen = () => {
 
   const handleSendMessage = () => {
     if (!user.isSignedIn) {
-      // open login dialog
       setIsDialogOpen(true);
       return;
     }
-    const newMessage = {
-      _id: Date.now().toString(),
-      content: chatInput,
-      authorId: "user2",
-      isPinned: true,
-      reactions: [{ userId: "user1", emoji: "😂" }],
-      isEdited: true,
-      editedAt: 1715150000000,
-    };
-    setMessages((prev) => [...prev, newMessage]);
-    setChatInput("");
   };
-
-  useEffect(() => {
-    console.log("user", user);
-  }, []);
 
   return (
     <div className=" h-screen flex flex-col container mx-auto p-4 pb-6 bg-slate-100 space-y-3">
       <nav className="flex">
-        <SignedIn>
-          <UserButton />
-          {user && (
-            <h2 className="flex-1 text-center text-2xl">
-              {user.user?.fullName}
-            </h2>
-          )}
-        </SignedIn>
-        {/* <SignedOut>
-          <h2 className="flex-1 text-center">Who are you?</h2>
-        </SignedOut> */}
+        <SignedOut>
+          <h2 className="flex-1 text-center text-2xl">Who are you?</h2>
+        </SignedOut>
 
         <LoginDialog
           isDialogOpen={isDialogOpen}
@@ -68,7 +37,7 @@ const ChatScreen = () => {
 
       <section className="flex-1 space-y-2">
         {messages.map((msg) => (
-          <MessageBubble key={msg._id} {...msg} />
+          <GuestMessageBubble key={msg._id} {...msg} />
         ))}
       </section>
       <footer className="relative">
@@ -93,4 +62,4 @@ const ChatScreen = () => {
   );
 };
 
-export default ChatScreen;
+export default GuestChatScreen;
