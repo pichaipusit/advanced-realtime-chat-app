@@ -1,0 +1,49 @@
+import { cn } from "@/lib/utils";
+import { icons, Pencil, Undo, UndoDot } from "lucide-react";
+import React from "react";
+
+type MessageActionsProps = {
+  isActionsOpen: boolean;
+};
+const MessageActions = ({ isActionsOpen }: MessageActionsProps) => {
+  const actions = [
+    {
+      label: "Edit",
+      icon: <Pencil />,
+      onClick: () => {
+        // Handle edit logic
+      },
+    },
+    {
+      label: "Unsend",
+      icon: <UndoDot className="text-red-400" />,
+      onClick: () => {
+        // Handle unsend logic
+      },
+    },
+  ];
+  return (
+    <div
+      className={cn(
+        "bg-slate-200 w-1/3 absolute right-1/3  rounded-md transition-all z-50",
+        isActionsOpen ? "scale-100 opacity-100" : "scale-0 opacity-0"
+      )}
+    >
+      {isActionsOpen &&
+        actions.map((act) => (
+          <button
+            key={act.label}
+            onClick={act.onClick}
+            className={cn("flex space-x-2 p-2 cursor-pointer w-full")}
+          >
+            {act.icon}
+            <p className={cn(act.label === "Unsend" && "text-red-400")}>
+              {act.label}{" "}
+            </p>
+          </button>
+        ))}
+    </div>
+  );
+};
+
+export default MessageActions;

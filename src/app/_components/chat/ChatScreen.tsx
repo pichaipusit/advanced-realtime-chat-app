@@ -32,10 +32,6 @@ const ChatScreen = () => {
     setChatInput("");
   };
 
-  useEffect(() => {
-    console.log("user", user?.id);
-  }, []);
-
   return (
     <div className=" h-screen flex flex-col container mx-auto p-4 pb-6 bg-slate-100 space-y-3">
       <nav className="flex">
