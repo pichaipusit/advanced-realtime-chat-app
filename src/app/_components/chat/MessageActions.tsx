@@ -1,18 +1,18 @@
 import { cn } from "@/lib/utils";
+import { EditMessage, Message } from "@/types/message.types";
 import { icons, Pencil, Undo, UndoDot } from "lucide-react";
-import React from "react";
+import React, { MouseEventHandler } from "react";
 
 type MessageActionsProps = {
   isActionsOpen: boolean;
+  onEdit: MouseEventHandler<HTMLButtonElement>;
 };
-const MessageActions = ({ isActionsOpen }: MessageActionsProps) => {
+const MessageActions = ({ isActionsOpen, onEdit }: MessageActionsProps) => {
   const actions = [
     {
       label: "Edit",
       icon: <Pencil />,
-      onClick: () => {
-        // Handle edit logic
-      },
+      onClick: onEdit,
     },
     {
       label: "Unsend",

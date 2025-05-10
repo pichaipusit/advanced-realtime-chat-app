@@ -1,6 +1,5 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
-// import { getAuthUserId } from "@convex-dev/auth/server";
 
 export const getMessages = query({
   args: {},
@@ -18,7 +17,6 @@ export const getMessages = query({
 export const sendMessage = mutation({
   args: {
     content: v.string(),
-    userId: v.string(),
   },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
@@ -28,7 +26,7 @@ export const sendMessage = mutation({
 
     return await ctx.db.insert("messages", {
       content: args.content,
-      authorId: args.userId,
+      authorId: identity.subject,
       isPinned: false,
       reactions: [],
       isEdited: false,
@@ -36,26 +34,29 @@ export const sendMessage = mutation({
   },
 });
 
-// export const edit = mutation({
-//   args: {
-//     messageId: v.id("messages"),
-//     content: v.string(),
-//   },
-//   handler: async (ctx, args) => {
-//     const userId = await getAuthUserId(ctx);
-//     if (!userId) throw new Error("Not authenticated");
+export const editMessage = mutation({
+  args: {
+    messageId: v.id("messages"),
+    content: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Unauthenticated");
+    }
 
-//     const message = await ctx.db.get(args.messageId);
-//     if (!message) throw new Error("Message not found");
-//     if (message.authorId !== userId) throw new Error("Not authorized");
+    const message = await ctx.db.get(args.messageId);
+    if (!message) throw new Error("Message not found");
+    if (message.authorId !== identity.subject)
+      throw new Error("Not authorized");
 
-//     await ctx.db.patch(args.messageId, {
-//       content: args.content,
-//       isEdited: true,
-//       editedAt: Date.now(),
-//     });
-//   },
-// });
+    await ctx.db.patch(args.messageId, {
+      content: args.content,
+      isEdited: true,
+      editedAt: Date.now(),
+    });
+  },
+});
 
 // export const remove = mutation({
 //   args: {

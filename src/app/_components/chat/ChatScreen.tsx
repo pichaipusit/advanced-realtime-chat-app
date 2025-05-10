@@ -3,18 +3,22 @@ import { Button } from "@/components/ui/button";
 import { Send } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import MessageBubble from "./MessageBubble";
-import { Message } from "@/types/message.types";
+import { EditMessage, Message } from "@/types/message.types";
 import { SignedIn, UserButton, useUser } from "@clerk/nextjs";
 import LoginDialog from "@/components/LoginDialog";
-import { useMutation, useQuery } from "convex/react";
+import { useConvexAuth, useMutation, useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
+import { Id } from "../../../../convex/_generated/dataModel";
 
 const ChatScreen = () => {
   const [chatInput, setChatInput] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [editingMessageId, setEditingMessageId] =
+    useState<Id<"messages"> | null>(null);
 
   const messages = useQuery(api.messages.getMessages);
   const sendMessage = useMutation(api.messages.sendMessage);
+  const editMessage = useMutation(api.messages.editMessage);
 
   const { user, isSignedIn } = useUser();
 
@@ -25,11 +29,28 @@ const ChatScreen = () => {
       return;
     }
 
+    if (!chatInput.trim()) return;
+
+    if (editingMessageId) {
+      editMessage({ messageId: editingMessageId, content: chatInput });
+      resetInput();
+      return;
+    }
+
     sendMessage({
       content: chatInput,
-      userId: user.id,
     });
+    resetInput();
+  };
+
+  const resetInput = () => {
     setChatInput("");
+    setEditingMessageId(null);
+  };
+
+  const handleEditMessage = (message: EditMessage) => {
+    setChatInput(message.content);
+    setEditingMessageId(message._id);
   };
 
   return (
@@ -48,8 +69,14 @@ const ChatScreen = () => {
         />
       </nav>
 
-      <section className="flex-1 space-y-2">
-        {messages?.map((msg) => <MessageBubble key={msg._id} {...msg} />)}
+      <section className="flex-1 space-y-4">
+        {messages?.map((msg) => (
+          <MessageBubble
+            key={msg._id}
+            message={msg}
+            onEdit={handleEditMessage}
+          />
+        ))}
       </section>
       <footer className="relative">
         <input
