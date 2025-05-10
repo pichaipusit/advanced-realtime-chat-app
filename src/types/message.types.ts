@@ -1,5 +1,7 @@
+import { Id } from "../../convex/_generated/dataModel";
+
 export type Message = {
-  _id: string; // Convex document ID
+  _id: Id<"messages">; // Convex document ID
   content: string;
   authorId: string;
   isPinned: boolean;
@@ -11,3 +13,5 @@ export type Message = {
   editedAt?: number;
   deletedAt?: number;
 };
+
+export type EditMessage = Pick<Message, "_id" | "content">;
