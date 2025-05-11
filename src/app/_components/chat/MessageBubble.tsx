@@ -9,14 +9,15 @@ import React, {
 } from "react";
 import MessageActions from "./MessageActions";
 import { useOnClickOutside } from "@/hooks/useOnClickOutside";
-import { EditMessage, Message } from "@/types/message.types";
+import { EditMessage, Message, UnsendMessage } from "@/types/message.types";
 
 type MessageBubbleProps = {
   message: Message;
   onEdit: (message: EditMessage) => void;
+  onUnsend: (id: UnsendMessage) => void;
 };
 
-const MessageBubble = ({ message, onEdit }: MessageBubbleProps) => {
+const MessageBubble = ({ message, onEdit, onUnsend }: MessageBubbleProps) => {
   const [isActionsOpen, setIsActionsOpen] = useState(false);
   const holdTimeout = useRef<NodeJS.Timeout | null>(null);
   const actionsRef = useRef<HTMLElement | null>(null);
@@ -69,6 +70,7 @@ const MessageBubble = ({ message, onEdit }: MessageBubbleProps) => {
               onEdit(message);
               setIsActionsOpen(false);
             }}
+            onUnsend={() => onUnsend(message._id)}
           />
         )}
       </span>

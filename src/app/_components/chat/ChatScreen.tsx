@@ -38,6 +38,7 @@ const ChatScreen = () => {
             key={msg._id}
             message={msg}
             onEdit={chat.handleEditMessage}
+            onUnsend={chat.handleUnsendMessage}
           />
         ))}
       </section>
