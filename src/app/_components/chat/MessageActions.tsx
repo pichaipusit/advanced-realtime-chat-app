@@ -6,8 +6,13 @@ import React, { MouseEventHandler } from "react";
 type MessageActionsProps = {
   isActionsOpen: boolean;
   onEdit: MouseEventHandler<HTMLButtonElement>;
+  onUnsend: MouseEventHandler<HTMLButtonElement>;
 };
-const MessageActions = ({ isActionsOpen, onEdit }: MessageActionsProps) => {
+const MessageActions = ({
+  isActionsOpen,
+  onEdit,
+  onUnsend,
+}: MessageActionsProps) => {
   const actions = [
     {
       label: "Edit",
@@ -17,9 +22,7 @@ const MessageActions = ({ isActionsOpen, onEdit }: MessageActionsProps) => {
     {
       label: "Unsend",
       icon: <UndoDot className="text-red-400" />,
-      onClick: () => {
-        // Handle unsend logic
-      },
+      onClick: onUnsend,
     },
   ];
   return (

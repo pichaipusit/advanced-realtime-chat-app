@@ -58,23 +58,26 @@ export const editMessage = mutation({
   },
 });
 
-// export const remove = mutation({
-//   args: {
-//     messageId: v.id("messages"),
-//   },
-//   handler: async (ctx, args) => {
-//     const userId = await getAuthUserId(ctx);
-//     if (!userId) throw new Error("Not authenticated");
+export const deleteMessage = mutation({
+  args: {
+    messageId: v.id("messages"),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Unauthenticated");
+    }
 
-//     const message = await ctx.db.get(args.messageId);
-//     if (!message) throw new Error("Message not found");
-//     if (message.authorId !== userId) throw new Error("Not authorized");
+    const message = await ctx.db.get(args.messageId);
+    if (!message) throw new Error("Message not found");
+    if (message.authorId !== identity.subject)
+      throw new Error("Not authorized");
 
-//     await ctx.db.patch(args.messageId, {
-//       deletedAt: Date.now(),
-//     });
-//   },
-// });
+    await ctx.db.patch(args.messageId, {
+      deletedAt: Date.now(),
+    });
+  },
+});
 
 // export const togglePin = mutation({
 //   args: {
