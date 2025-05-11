@@ -15,4 +15,4 @@ export type Message = {
 };
 
 export type EditMessage = Pick<Message, "_id" | "content">;
-export type UnsendMessage = Id<"messages">;
+export type MessageId = Id<"messages">;

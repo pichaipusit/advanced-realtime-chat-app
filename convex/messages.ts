@@ -1,5 +1,5 @@
 import { v } from "convex/values";
-import { mutation, query } from "./_generated/server";
+import { mutation, MutationCtx, query } from "./_generated/server";
 
 export const getMessages = query({
   args: {},
@@ -79,22 +79,26 @@ export const deleteMessage = mutation({
   },
 });
 
-// export const togglePin = mutation({
-//   args: {
-//     messageId: v.id("messages"),
-//   },
-//   handler: async (ctx, args) => {
-//     const userId = await getAuthUserId(ctx);
-//     if (!userId) throw new Error("Not authenticated");
+export const togglePinMessage = mutation({
+  args: {
+    messageId: v.id("messages"),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Unauthenticated");
+    }
 
-//     const message = await ctx.db.get(args.messageId);
-//     if (!message) throw new Error("Message not found");
+    const message = await ctx.db.get(args.messageId);
+    if (!message) throw new Error("Message not found");
+    if (message.authorId !== identity.subject)
+      throw new Error("Not authorized");
 
-//     await ctx.db.patch(args.messageId, {
-//       isPinned: !message.isPinned,
-//     });
-//   },
-// });
+    await ctx.db.patch(args.messageId, {
+      isPinned: !message.isPinned,
+    });
+  },
+});
 
 // export const react = mutation({
 //   args: {
