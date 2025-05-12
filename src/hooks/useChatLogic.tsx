@@ -1,7 +1,7 @@
 import { useMutation } from "convex/react";
 import { useState } from "react";
 import { api } from "../../convex/_generated/api";
-import { EditMessage, UnsendMessage } from "@/types/message.types";
+import { EditMessage, MessageId } from "@/types/message.types";
 import { Id } from "../../convex/_generated/dataModel";
 import { useUser } from "@clerk/nextjs";
 
@@ -15,6 +15,7 @@ export function useChatLogic() {
   const sendMessage = useMutation(api.messages.sendMessage);
   const editMessage = useMutation(api.messages.editMessage);
   const deleteMessage = useMutation(api.messages.deleteMessage);
+  const togglePinMessage = useMutation(api.messages.togglePinMessage);
 
   const resetInput = () => {
     setChatInput("");
@@ -45,8 +46,11 @@ export function useChatLogic() {
     setChatInput(message.content);
     setEditingMessageId(message._id);
   };
-  const handleUnsendMessage = (messageId: UnsendMessage) => {
+  const handleUnsendMessage = (messageId: MessageId) => {
     deleteMessage({ messageId });
+  };
+  const handlePinMessage = (messageId: MessageId) => {
+    togglePinMessage({ messageId });
   };
 
   return {
@@ -57,5 +61,6 @@ export function useChatLogic() {
     handleSendMessage,
     handleEditMessage,
     handleUnsendMessage,
+    handlePinMessage,
   };
 }

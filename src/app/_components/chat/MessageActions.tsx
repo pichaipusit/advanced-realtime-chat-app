@@ -1,17 +1,19 @@
 import { cn } from "@/lib/utils";
 import { EditMessage, Message } from "@/types/message.types";
-import { icons, Pencil, Undo, UndoDot } from "lucide-react";
+import { icons, Pencil, Pin, Undo, UndoDot } from "lucide-react";
 import React, { MouseEventHandler } from "react";
 
 type MessageActionsProps = {
   isActionsOpen: boolean;
-  onEdit: MouseEventHandler<HTMLButtonElement>;
-  onUnsend: MouseEventHandler<HTMLButtonElement>;
+  onEdit: React.PointerEventHandler<HTMLButtonElement>;
+  onUnsend: React.PointerEventHandler<HTMLButtonElement>;
+  onPin: React.PointerEventHandler<HTMLButtonElement>;
 };
 const MessageActions = ({
   isActionsOpen,
   onEdit,
   onUnsend,
+  onPin,
 }: MessageActionsProps) => {
   const actions = [
     {
@@ -23,6 +25,11 @@ const MessageActions = ({
       label: "Unsend",
       icon: <UndoDot className="text-red-400" />,
       onClick: onUnsend,
+    },
+    {
+      label: "Pin",
+      icon: <Pin />,
+      onClick: onPin,
     },
   ];
   return (
