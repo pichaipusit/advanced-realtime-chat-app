@@ -10,6 +10,7 @@ import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { useChatLogic } from "@/hooks/useChatLogic";
 import PinnedBar from "./PinnedBar";
+import { Toaster } from "@/components/ui/sonner";
 
 const ChatScreen = () => {
   const [isPinMenuOpen, setIsPinMenuOpen] = useState(false);
@@ -108,6 +109,7 @@ const ChatScreen = () => {
         >
           <Send />
         </Button>
+        <Toaster />
       </footer>
     </div>
   );
