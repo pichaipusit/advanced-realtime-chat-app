@@ -2,6 +2,7 @@ import { cn } from "@/lib/utils";
 import { useUser } from "@clerk/nextjs";
 import React, {
   MouseEventHandler,
+  Ref,
   RefObject,
   useEffect,
   useRef,
@@ -16,6 +17,7 @@ type MessageBubbleProps = {
   onEdit: (message: EditMessage) => void;
   onUnsend: (id: MessageId) => void;
   onPin: (id: MessageId) => void;
+  ref: Ref<HTMLDivElement> | undefined;
 };
 
 const MessageBubble = ({
@@ -23,6 +25,7 @@ const MessageBubble = ({
   onEdit,
   onUnsend,
   onPin,
+  ref,
 }: MessageBubbleProps) => {
   const [isActionsOpen, setIsActionsOpen] = useState(false);
   const holdTimeout = useRef<NodeJS.Timeout | null>(null);
@@ -46,7 +49,7 @@ const MessageBubble = ({
   useOnClickOutside(actionsRef, () => setIsActionsOpen(false));
 
   return (
-    <div>
+    <div ref={ref}>
       <div
         className={cn(
           "flex",

@@ -9,24 +9,26 @@ type PinnedBarProps = {
   pinnedMessages: Message[];
   isPinMenuOpen: boolean;
   setIsPinMenuOpen: Dispatch<SetStateAction<boolean>>;
+  onScrollToMessage: (id: MessageId) => void;
 };
 const PinnedBar = ({
   pinnedMessages,
   isPinMenuOpen,
   setIsPinMenuOpen,
+  onScrollToMessage,
 }: PinnedBarProps) => {
   const { handlePinMessage } = useChatLogic();
-  const { onPointerDown, onPointerUp } = useHold<MessageId>({
+  const { handlePointerDown, handlePointerUp } = useHold<MessageId>({
     onHold: (id) => handlePinMessage(id),
   });
 
   return (
-    <div>
+    <div className="z-50">
       {pinnedMessages && (
         <div className="bg-slate-200 w-full max-w-xl fixed top-18 left-1/2 -translate-1/2 right-0 cursor-pointer">
           {pinnedMessages.length > 0 && (
             <button
-              className="p-2 w-full text-left flex cursor-pointer"
+              className="p-2 w-full text-left flex cursor-pointer "
               onClick={() => setIsPinMenuOpen(!isPinMenuOpen)}
             >
               <ChevronRight
@@ -49,8 +51,13 @@ const PinnedBar = ({
               <li
                 key={msg._id}
                 className="py-2"
-                onPointerDown={() => onPointerDown(msg._id)}
-                onPointerUp={onPointerUp}
+                onPointerDown={() => {
+                  handlePointerDown(msg._id);
+                  onScrollToMessage(msg._id);
+                }}
+                onPointerUp={handlePointerUp}
+                onPointerCancel={handlePointerUp}
+                onPointerLeave={handlePointerUp}
               >
                 {msg.content}{" "}
               </li>

@@ -4,7 +4,6 @@ import { api } from "../../convex/_generated/api";
 import { EditMessage, MessageId } from "@/types/message.types";
 import { Id } from "../../convex/_generated/dataModel";
 import { useUser } from "@clerk/nextjs";
-import { togglePinMessage } from "../../convex/messages";
 
 export function useChatLogic() {
   const [chatInput, setChatInput] = useState("");
