@@ -4,6 +4,8 @@ import { api } from "../../convex/_generated/api";
 import { EditMessage, MessageId } from "@/types/message.types";
 import { Id } from "../../convex/_generated/dataModel";
 import { useUser } from "@clerk/nextjs";
+import { toast } from "sonner";
+import { withErrorHandler } from "@/lib/utils";
 
 export function useChatLogic() {
   const [chatInput, setChatInput] = useState("");
@@ -22,7 +24,7 @@ export function useChatLogic() {
     setEditingMessageId(null);
   };
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (!isSignedIn) {
       setIsDialogOpen(true);
       return;
@@ -30,16 +32,20 @@ export function useChatLogic() {
 
     if (!chatInput.trim()) return;
 
-    if (editingMessageId) {
-      editMessage({ messageId: editingMessageId, content: chatInput });
+    await withErrorHandler(async () => {
+      if (editingMessageId) {
+        await editMessage({
+          messageId: editingMessageId,
+          content: chatInput,
+        });
+        resetInput();
+        return;
+      }
+      await sendMessage({
+        content: chatInput,
+      });
       resetInput();
-      return;
-    }
-
-    sendMessage({
-      content: chatInput,
-    });
-    resetInput();
+    }, "Failed to send message");
   };
 
   const handleEditMessage = (message: EditMessage) => {
@@ -47,10 +53,16 @@ export function useChatLogic() {
     setEditingMessageId(message._id);
   };
   const handleUnsendMessage = (messageId: MessageId) => {
-    deleteMessage({ messageId });
+    withErrorHandler(
+      async () => deleteMessage({ messageId }),
+      "Failed to delete message"
+    );
   };
   const handlePinMessage = (messageId: MessageId) => {
-    togglePinMessage({ messageId });
+    withErrorHandler(
+      async () => togglePinMessage({ messageId }),
+      "Failed to delete message"
+    );
   };
 
   return {
