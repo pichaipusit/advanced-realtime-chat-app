@@ -1,5 +1,6 @@
 import { v } from "convex/values";
 import { mutation, MutationCtx, query } from "./_generated/server";
+import { requireAuthenticated, requireMessageOwner } from "./utils";
 
 export const getMessages = query({
   args: {},
@@ -19,10 +20,7 @@ export const sendMessage = mutation({
     content: v.string(),
   },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (identity === null) {
-      throw new Error("Not authenticated");
-    }
+    const identity = await requireAuthenticated(ctx);
 
     return await ctx.db.insert("messages", {
       content: args.content,
@@ -40,15 +38,7 @@ export const editMessage = mutation({
     content: v.string(),
   },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      throw new Error("Unauthenticated");
-    }
-
-    const message = await ctx.db.get(args.messageId);
-    if (!message) throw new Error("Message not found");
-    if (message.authorId !== identity.subject)
-      throw new Error("Not authorized");
+    await requireMessageOwner(ctx, args.messageId);
 
     await ctx.db.patch(args.messageId, {
       content: args.content,
@@ -63,15 +53,7 @@ export const deleteMessage = mutation({
     messageId: v.id("messages"),
   },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      throw new Error("Unauthenticated");
-    }
-
-    const message = await ctx.db.get(args.messageId);
-    if (!message) throw new Error("Message not found");
-    if (message.authorId !== identity.subject)
-      throw new Error("Not authorized");
+    await requireMessageOwner(ctx, args.messageId);
 
     await ctx.db.patch(args.messageId, {
       deletedAt: Date.now(),
@@ -84,15 +66,7 @@ export const togglePinMessage = mutation({
     messageId: v.id("messages"),
   },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      throw new Error("Unauthenticated");
-    }
-
-    const message = await ctx.db.get(args.messageId);
-    if (!message) throw new Error("Message not found");
-    if (message.authorId !== identity.subject)
-      throw new Error("Not authorized");
+    const { message } = await requireMessageOwner(ctx, args.messageId);
 
     await ctx.db.patch(args.messageId, {
       isPinned: !message.isPinned,
