@@ -74,36 +74,37 @@ export const togglePinMessage = mutation({
   },
 });
 
-// export const react = mutation({
-//   args: {
-//     messageId: v.id("messages"),
-//     emoji: v.string(),
-//   },
-//   handler: async (ctx, args) => {
-//     const userId = await getAuthUserId(ctx);
-//     if (!userId) throw new Error("Not authenticated");
+export const reactToMessage = mutation({
+  args: {
+    messageId: v.id("messages"),
+    emoji: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const identity = await requireAuthenticated(ctx);
+    const userId = identity.subject;
 
-//     const message = await ctx.db.get(args.messageId);
-//     if (!message) throw new Error("Message not found");
+    const message = await ctx.db.get(args.messageId);
+    if (!message) {
+      throw new Error("Message not found");
+    }
+    const existingReactionIndex = message.reactions.findIndex(
+      (r: { userId: string; emoji: string }) => r.userId === userId
+    );
 
-//     const existingReactionIndex = message.reactions.findIndex(
-//       (r) => r.userId === userId
-//     );
+    let reactions = [...message.reactions];
+    if (existingReactionIndex !== -1) {
+      if (reactions[existingReactionIndex].emoji === args.emoji) {
+        // Remove reaction if same emoji
+        reactions.splice(existingReactionIndex, 1);
+      } else {
+        // Update reaction if different emoji
+        reactions[existingReactionIndex] = { userId, emoji: args.emoji };
+      }
+    } else {
+      // Add new reaction
+      reactions.push({ userId, emoji: args.emoji });
+    }
 
-//     let reactions = [...message.reactions];
-//     if (existingReactionIndex !== -1) {
-//       if (reactions[existingReactionIndex].emoji === args.emoji) {
-//         // Remove reaction if same emoji
-//         reactions.splice(existingReactionIndex, 1);
-//       } else {
-//         // Update reaction if different emoji
-//         reactions[existingReactionIndex] = { userId, emoji: args.emoji };
-//       }
-//     } else {
-//       // Add new reaction
-//       reactions.push({ userId, emoji: args.emoji });
-//     }
-
-//     await ctx.db.patch(args.messageId, { reactions });
-//   },
-// });
+    await ctx.db.patch(args.messageId, { reactions });
+  },
+});
