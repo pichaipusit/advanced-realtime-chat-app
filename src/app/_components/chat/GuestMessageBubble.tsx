@@ -3,14 +3,9 @@ import React from "react";
 
 type MessageBubbleProps = {
   content: string;
-  isEdited: boolean;
   authorId: string;
 };
-const GuestMessageBubble = ({
-  content,
-  isEdited,
-  authorId,
-}: MessageBubbleProps) => {
+const GuestMessageBubble = ({ content, authorId }: MessageBubbleProps) => {
   return (
     <div
       className={cn(

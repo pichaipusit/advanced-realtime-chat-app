@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Send } from "lucide-react";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import { Message } from "@/types/message.types";
 import { fakeMessages } from "@/lib/fake-data";
 import { SignedOut, useUser } from "@clerk/nextjs";
@@ -10,8 +10,8 @@ import GuestMessageBubble from "./GuestMessageBubble";
 
 const GuestChatScreen = () => {
   const [chatInput, setChatInput] = useState("");
-  const [messages, setMessages] = useState<Message[]>(fakeMessages);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const messages: Message[] = fakeMessages;
 
   const user = useUser();
 

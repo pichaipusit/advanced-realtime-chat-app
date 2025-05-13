@@ -1,12 +1,12 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { ChevronRight, Send } from "lucide-react";
+import { Send } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import MessageBubble from "./MessageBubble";
-import { EditMessage, Message, MessageId } from "@/types/message.types";
+import { Message, MessageId } from "@/types/message.types";
 import { SignedIn, UserButton, useUser } from "@clerk/nextjs";
 import LoginDialog from "@/components/LoginDialog";
-import { useMutation, useQuery } from "convex/react";
+import { useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { useChatLogic } from "@/hooks/useChatLogic";
 import PinnedBar from "./PinnedBar";

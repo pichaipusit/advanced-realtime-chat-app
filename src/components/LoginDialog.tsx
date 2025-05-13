@@ -1,4 +1,4 @@
-import React, { RefObject } from "react";
+import React from "react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -8,10 +8,8 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { SignInButton } from "@clerk/nextjs";
-import { X } from "lucide-react";
 
 type LoginDialogProps = {
   isDialogOpen: boolean;

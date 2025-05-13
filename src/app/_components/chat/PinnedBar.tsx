@@ -3,7 +3,7 @@ import { useHold } from "@/hooks/useHold";
 import { cn } from "@/lib/utils";
 import { Message, MessageId } from "@/types/message.types";
 import { ChevronRight } from "lucide-react";
-import React, { Dispatch, SetStateAction, useRef } from "react";
+import React, { Dispatch, SetStateAction } from "react";
 
 type PinnedBarProps = {
   pinnedMessages: Message[];
