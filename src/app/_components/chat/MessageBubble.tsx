@@ -1,13 +1,6 @@
 import { cn } from "@/lib/utils";
 import { useUser } from "@clerk/nextjs";
-import React, {
-  MouseEventHandler,
-  Ref,
-  RefObject,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { Ref, useRef, useState } from "react";
 import MessageActions from "./MessageActions";
 import { useOnClickOutside } from "@/hooks/useOnClickOutside";
 import {
@@ -67,16 +60,17 @@ const MessageBubble = ({
         {message.isEdited && isMessageOwner && (
           <span className=" text-xs italic opacity-50  ">Edited</span>
         )}
-        <p
-          className={cn(
-            "relative py-2 px-3 rounded-full w-fit cursor-pointer active:scale-95 transition-transform",
-            isMessageOwner ? " bg-teal-400 text-white " : "bg-slate-200"
-          )}
-          onPointerDown={handlePointerDown}
-          onPointerUp={handlePointerUp}
-        >
-          {message.content}
-          {/* Emoji reaction  */}
+        <div className="relative">
+          <p
+            className={cn(
+              " py-2 px-3 rounded-full w-fit cursor-pointer active:scale-95 transition-transform",
+              isMessageOwner ? " bg-teal-400 text-white " : "bg-slate-200"
+            )}
+            onPointerDown={handlePointerDown}
+            onPointerUp={handlePointerUp}
+          >
+            {message.content}
+          </p>
           {message.reactions.length > 0 && (
             <ul className="absolute flex left-1 top-3/4 -translate-x-1/2 rounded-full z-10">
               {message.reactions.map((reaction) => (
@@ -84,7 +78,7 @@ const MessageBubble = ({
               ))}
             </ul>
           )}
-        </p>
+        </div>
       </div>
 
       {/* Reactions + Actions Menu*/}

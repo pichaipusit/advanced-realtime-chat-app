@@ -4,7 +4,6 @@ import { api } from "../../convex/_generated/api";
 import { AddReaction, EditMessage, MessageId } from "@/types/message.types";
 import { Id } from "../../convex/_generated/dataModel";
 import { useUser } from "@clerk/nextjs";
-import { toast } from "sonner";
 import { withErrorHandler } from "@/lib/utils";
 
 export function useChatLogic() {
@@ -12,7 +11,7 @@ export function useChatLogic() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingMessageId, setEditingMessageId] =
     useState<Id<"messages"> | null>(null);
-  const { user, isSignedIn } = useUser();
+  const { isSignedIn } = useUser();
 
   const sendMessage = useMutation(api.messages.sendMessage);
   const editMessage = useMutation(api.messages.editMessage);

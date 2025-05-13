@@ -1,7 +1,6 @@
 import { cn } from "@/lib/utils";
-import { EditMessage, Message } from "@/types/message.types";
-import { icons, Pencil, Pin, Undo, UndoDot } from "lucide-react";
-import React, { MouseEventHandler } from "react";
+import { Pencil, Pin, UndoDot } from "lucide-react";
+import React from "react";
 
 type MessageActionsProps = {
   isActionsOpen: boolean;

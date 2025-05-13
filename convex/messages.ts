@@ -1,5 +1,5 @@
-import { ConvexError, v } from "convex/values";
-import { mutation, MutationCtx, query } from "./_generated/server";
+import { v } from "convex/values";
+import { mutation, query } from "./_generated/server";
 import { requireAuthenticated, requireMessageOwner } from "./utils";
 
 export const getMessages = query({
