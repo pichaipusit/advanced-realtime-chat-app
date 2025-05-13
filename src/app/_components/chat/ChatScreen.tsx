@@ -78,6 +78,7 @@ const ChatScreen = () => {
             onEdit={chat.handleEditMessage}
             onUnsend={chat.handleUnsendMessage}
             onPin={chat.handlePinMessage}
+            onReact={chat.handleReactToMessage}
             ref={
               msg.isPinned
                 ? (el) => {

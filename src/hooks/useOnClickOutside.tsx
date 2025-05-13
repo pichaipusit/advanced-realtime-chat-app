@@ -1,14 +1,16 @@
 import { useEffect } from "react";
 
 export function useOnClickOutside(
-  ref: React.RefObject<HTMLElement | null>,
+  refs: React.RefObject<HTMLElement | null>[],
   handler: (event: PointerEvent) => void
 ) {
   useEffect(() => {
     const listener = (event: PointerEvent) => {
-      if (!ref.current || ref.current.contains(event.target as Node)) {
-        return;
-      }
+      const isInsideAny = refs.some(
+        (ref) => ref.current && ref.current.contains(event.target as Node)
+      );
+      if (isInsideAny) return;
+
       handler(event);
     };
 
@@ -16,5 +18,5 @@ export function useOnClickOutside(
     return () => {
       window.removeEventListener("pointerdown", listener);
     };
-  }, [ref, handler]);
+  }, [refs, handler]);
 }

@@ -35,7 +35,7 @@ const MessageActions = ({
   return (
     <div
       className={cn(
-        "bg-slate-200 w-1/3 absolute right-1/3  rounded-md transition-all z-50",
+        "bg-slate-200 w-fit  right-1/3  rounded-md transition-all ",
         isActionsOpen ? "scale-100 opacity-100" : "scale-0 opacity-0"
       )}
     >

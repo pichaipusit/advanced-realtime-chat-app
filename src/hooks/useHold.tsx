@@ -4,7 +4,7 @@ type UseHoldOptions<T> = {
   onHold: (arg: T) => void;
   duration?: number;
 };
-export function useHold<T>({ onHold, duration = 1000 }: UseHoldOptions<T>) {
+export function useHold<T>({ onHold, duration = 600 }: UseHoldOptions<T>) {
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isHeldRef = useRef(false);
 

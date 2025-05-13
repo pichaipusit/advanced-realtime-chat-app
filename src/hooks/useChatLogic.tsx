@@ -1,7 +1,7 @@
 import { useMutation } from "convex/react";
 import { useState } from "react";
 import { api } from "../../convex/_generated/api";
-import { EditMessage, MessageId } from "@/types/message.types";
+import { AddReaction, EditMessage, MessageId } from "@/types/message.types";
 import { Id } from "../../convex/_generated/dataModel";
 import { useUser } from "@clerk/nextjs";
 import { toast } from "sonner";
@@ -18,6 +18,7 @@ export function useChatLogic() {
   const editMessage = useMutation(api.messages.editMessage);
   const deleteMessage = useMutation(api.messages.deleteMessage);
   const togglePinMessage = useMutation(api.messages.togglePinMessage);
+  const reactToMessage = useMutation(api.messages.reactToMessage);
 
   const resetInput = () => {
     setChatInput("");
@@ -64,6 +65,12 @@ export function useChatLogic() {
       "Failed to delete message"
     );
   };
+  const handleReactToMessage = ({ messageId, emoji }: AddReaction) => {
+    withErrorHandler(
+      async () => reactToMessage({ messageId, emoji }),
+      "Failed to react to message"
+    );
+  };
 
   return {
     chatInput,
@@ -74,5 +81,6 @@ export function useChatLogic() {
     handleEditMessage,
     handleUnsendMessage,
     handlePinMessage,
+    handleReactToMessage,
   };
 }

@@ -1,14 +1,20 @@
 import { Id } from "../../convex/_generated/dataModel";
 
+export type MessageReaction = {
+  userId: string;
+  emoji: string;
+};
+export type AddReaction = {
+  messageId: Id<"messages">;
+  emoji: string;
+};
+
 export type Message = {
   _id: Id<"messages">; // Convex document ID
   content: string;
   authorId: string;
   isPinned: boolean;
-  reactions: {
-    userId: string;
-    emoji: string;
-  }[];
+  reactions: MessageReaction[];
   isEdited: boolean;
   editedAt?: number;
   deletedAt?: number;
