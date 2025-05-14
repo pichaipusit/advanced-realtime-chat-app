@@ -20,7 +20,7 @@ export const fakeMessages: Message[] = [
   },
   {
     _id: "msg3",
-    content: "This message was deleted.",
+    content: "อุ้ย หลงเข้ามาอยู่ในใจผมได้ไงครับเนี่ย 😊",
     authorId: "user1",
     isPinned: false,
     reactions: [],
