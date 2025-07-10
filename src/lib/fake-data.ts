@@ -4,7 +4,7 @@ import { Id } from "../../convex/_generated/dataModel";
 export const fakeMessages: Message[] = [
   {
     _id: "msg1" as Id<"messages">,
-    content: "Hello world!",
+    content: "Hi Developers!",
     authorId: "user1",
     isPinned: false,
     reactions: [{ userId: "user2", emoji: "👍" }],
@@ -12,7 +12,7 @@ export const fakeMessages: Message[] = [
   },
   {
     _id: "msg2" as Id<"messages">,
-    content: "This message was edited.",
+    content: "Hope you have a great day.",
     authorId: "user2",
     isPinned: true,
     reactions: [{ userId: "user1", emoji: "😂" }],
@@ -21,7 +21,7 @@ export const fakeMessages: Message[] = [
   },
   {
     _id: "msg3" as Id<"messages">,
-    content: "อุ้ย หลงเข้ามาอยู่ในใจผมได้ไงครับเนี่ย 😊",
+    content: "Try sending a message 😊",
     authorId: "user1",
     isPinned: false,
     reactions: [],
